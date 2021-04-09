@@ -41,22 +41,48 @@ def fetchWbesRtmTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
     wbesRtmPxiTableDf['beneficiary_name'] = wbesRtmPxiTableDf.beneficiary.str.cat(wbesRtmPxiTableDf.beneficiary_type,sep=" ")
     wbesRtmPxiTableDf.drop(['index', 'beneficiary_type', 'beneficiary'],axis=1,inplace=True)
 
-    wbesRtmTableDf = wbesRtmIexTableDf.merge(wbesRtmPxiTableDf[['time_stamp', 'beneficiary_name', 'rtm_pxi_data']])
-    wbesRtmTableDf['wbes_rtm_data'] = (wbesRtmTableDf['rtm_iex_data'] + wbesRtmTableDf['rtm_pxi_data'])/4
-    wbesRtmTableDf['wbes_rtm_data'] = wbesRtmTableDf['wbes_rtm_data'].astype(int)
-    wbesRtmTableDf.drop(['rtm_iex_data', 'rtm_pxi_data'],axis=1,inplace=True)
-    wbesRtmTableDf['time_stamp'] = wbesRtmTableDf['time_stamp'].dt.strftime('%d-%m-%Y')
-    wbesRtmTableDf = wbesRtmTableDf.pivot(
-        index='beneficiary_name', columns='time_stamp', values='wbes_rtm_data')
+    # testing 
+    testRtmIex = wbesRtmIexTableDf 
+    testRtmPxi = wbesRtmPxiTableDf 
+    testRtmPxi = testRtmPxi.rename(columns={'rtm_pxi_data': 'data_value'})
+    testRtmIex = testRtmIex.rename(columns={'rtm_iex_data': 'data_value'})
+    testRtmIex = testRtmIex.append(testRtmPxi, ignore_index=True)
+    testRtmIex = testRtmIex.groupby(['time_stamp', 'beneficiary_name']).sum()
+    testRtmIex.reset_index(inplace = True)
+    testRtmIex['data_value'] = testRtmIex['data_value']/4
+    testRtmIex['data_value'] = testRtmIex['data_value'].astype(int)
+    testRtmIex['time_stamp'] = testRtmIex['time_stamp'].dt.strftime('%d-%m-%Y')
+    testRtmIex = testRtmIex.pivot(
+        index='beneficiary_name', columns='time_stamp', values='data_value')
+    testRtmIex = testRtmIex.fillna(0)
+    testRtmPxi = testRtmPxi.rename(columns={'data_value': 'wbes_rtm_data'})
+    wbesRtmTableDf = testRtmIex
     wbesRtmTableDf['Grand Total'] = wbesRtmTableDf.sum(axis=1)
     index_names = wbesRtmTableDf[wbesRtmTableDf['Grand Total'] == 0].index
     wbesRtmTableDf.drop(index_names, inplace = True)
     wbesRtmTableDf.reset_index(inplace = True)
     wbesRtmTableDf = wbesRtmTableDf.sort_values(by='Grand Total')
+    wbesRtmTableDf.reset_index(inplace = True)
+    wbesRtmTableDf.drop(['index'],axis=1,inplace=True)
+
+    # wbesRtmTableDf = wbesRtmIexTableDf.merge(wbesRtmPxiTableDf[['time_stamp', 'beneficiary_name', 'rtm_pxi_data']])
+    # wbesRtmTableDf['wbes_rtm_data'] = (wbesRtmTableDf['rtm_iex_data'] + wbesRtmTableDf['rtm_pxi_data'])/4
+    # wbesRtmTableDf['wbes_rtm_data'] = wbesRtmTableDf['wbes_rtm_data'].astype(int)
+    # wbesRtmTableDf.drop(['rtm_iex_data', 'rtm_pxi_data'],axis=1,inplace=True)
+    # wbesRtmTableDf['time_stamp'] = wbesRtmTableDf['time_stamp'].dt.strftime('%d-%m-%Y')
+    # wbesRtmTableDf = wbesRtmTableDf.pivot(
+    #     index='beneficiary_name', columns='time_stamp', values='wbes_rtm_data')
+    # wbesRtmTableDf['Grand Total'] = wbesRtmTableDf.sum(axis=1)
+    # index_names = wbesRtmTableDf[wbesRtmTableDf['Grand Total'] == 0].index
+    # wbesRtmTableDf.drop(index_names, inplace = True)
+    # wbesRtmTableDf.reset_index(inplace = True)
+    # wbesRtmTableDf = wbesRtmTableDf.sort_values(by='Grand Total')
 
     headers = []
     i= 0
+    cols = []
     for itr in wbesRtmTableDf.columns:
+        cols.append(itr)
         if itr == 'beneficiary_name':
             temp = {
                 'day_{0}'.format(i):'RTM Traded Energy(MWH)'
@@ -75,22 +101,32 @@ def fetchWbesRtmTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
             }
             i+=1
             headers.append(temp)
-
+    # cols[0] = 'beneficiary_name'
+    # cols.append('Grand Total')
     # rowSumList = wbesRtmTableDf.sum(axis=0)
 
     WbesRtmTableList: ISection_2_1["wbes_rtm_table"] = []
 
     for i in wbesRtmTableDf.index:
         wbesRtmDailyRecord: IWbesRtmTableRecord = {
-            'ben_name': wbesRtmTableDf['beneficiary_name'][i],
-            'day_1': wbesRtmTableDf['04-04-2021'][i],
-            'day_2': wbesRtmTableDf['05-04-2021'][i],
-            'day_3': wbesRtmTableDf['04-04-2021'][i],
-            'day_4': wbesRtmTableDf['05-04-2021'][i],
-            'day_5': wbesRtmTableDf['04-04-2021'][i],
-            'day_6': wbesRtmTableDf['05-04-2021'][i],
-            'day_7': wbesRtmTableDf['04-04-2021'][i],
-            'tot': wbesRtmTableDf['Grand Total'][i]
+            # 'ben_name': wbesRtmTableDf['beneficiary_name'][i],
+            # 'day_1': wbesRtmTableDf['04-04-2021'][i],
+            # 'day_2': wbesRtmTableDf['05-04-2021'][i],
+            # 'day_3': wbesRtmTableDf['04-04-2021'][i],
+            # 'day_4': wbesRtmTableDf['05-04-2021'][i],
+            # 'day_5': wbesRtmTableDf['04-04-2021'][i],
+            # 'day_6': wbesRtmTableDf['05-04-2021'][i],
+            # 'day_7': wbesRtmTableDf['04-04-2021'][i],
+            # 'tot': wbesRtmTableDf['Grand Total'][i]
+            'ben_name': wbesRtmTableDf[cols[0]][i],
+            'day_1': round(wbesRtmTableDf[cols[1]][i]),
+            'day_2': round(wbesRtmTableDf[cols[2]][i]),
+            'day_3': round(wbesRtmTableDf[cols[3]][i]),
+            'day_4': round(wbesRtmTableDf[cols[4]][i]),
+            'day_5': round(wbesRtmTableDf[cols[5]][i]),
+            'day_6': round(wbesRtmTableDf[cols[6]][i]),
+            'day_7': round(wbesRtmTableDf[cols[7]][i]),
+            'tot': round(wbesRtmTableDf[cols[8]][i])
         }
         WbesRtmTableList.append(wbesRtmDailyRecord)
     secData: ISection_2_1 = {

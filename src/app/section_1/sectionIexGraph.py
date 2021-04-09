@@ -10,7 +10,7 @@ def fetchIexGraphContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.date
     mRepo = MetricsDataRepo(appDbConnStr)
     
     # get iex rtm data for the range between start date and end date
-    startDt = endDt - dt.timedelta(days=1)
+    startDt = endDt - dt.timedelta(days=2)
     iexDamMcvVals = mRepo.getIexDamBlockWiseData('MCV (MW)', startDt, endDt)
     iexDamMcpVals = mRepo.getIexDamBlockWiseData('MCP (Rs/MWh) ', startDt, endDt)
     for itr in range(len(iexDamMcvVals)):

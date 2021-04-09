@@ -3,9 +3,10 @@ import datetime as dt
 from src.typeDefs.metricsDataRecord import IMetricsDataRecord
 from src.repos.getIexRtmBlockWiseData import getIexRtmBlockWiseData
 from src.repos.getIexDamBlockWiseData import getIexDamBlockWiseData
-# from src.typeDefs.soFarHighestDataRecord import ISoFarHighestDataRecord
 from src.repos.getWbesRtmIexBlockWiseData import getWbesRtmIexBlockWiseData
 from src.repos.getWbesRtmPxiBlockWiseData import getWbesRtmPxiBlockWiseData
+from src.repos.getWbesPxPxiBlockWiseData import getWbesPxPxiBlockWiseData
+from src.repos.getWbesPxIexBlockWiseData import getWbesPxIexBlockWiseData
 
 
 class MetricsDataRepo():
@@ -47,3 +48,17 @@ class MetricsDataRepo():
             bool: returns true if process is ok
         """
         return getWbesRtmPxiBlockWiseData(appDbConnStr=self.appDbConnStr, startDt=startDt, endDt=endDt)
+
+    def getWbesPxIexBlockWiseData(self, startDt: dt.datetime, endDt: dt.datetime) -> List[IMetricsDataRecord]:
+        """inserts a entity metrics time series data into the app db
+        Returns:
+            bool: returns true if process is ok
+        """
+        return getWbesPxIexBlockWiseData(appDbConnStr=self.appDbConnStr, startDt=startDt, endDt=endDt)
+
+    def getWbesPxPxiBlockWiseData(self, startDt: dt.datetime, endDt: dt.datetime) -> List[IMetricsDataRecord]:
+        """inserts a entity metrics time series data into the app db
+        Returns:
+            bool: returns true if process is ok
+        """
+        return getWbesPxPxiBlockWiseData(appDbConnStr=self.appDbConnStr, startDt=startDt, endDt=endDt)

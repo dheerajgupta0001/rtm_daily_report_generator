@@ -8,6 +8,7 @@ from src.app.section_1.sectionIexDamTable import fetchIexDamTableContext
 from src.app.section_1.sectionIexGraph import fetchIexGraphContext
 from src.typeDefs.iexRtmRecord import IIexRtmRecord
 from src.app.section_2.sectionWbesRtmTable import fetchWbesRtmTableContext
+from src.app.section_2.sectionWbesPxTable import fetchWbesPxTableContext
 # from docx2pdf import convert
 
 
@@ -17,8 +18,9 @@ class RtmDailyReportGenerator:
     sectionCtrls = {
         '1_1': True,
         '1_2': True,
-        '1_3': False,
-        '2_1': True
+        '1_3': True,
+        '2_1': True,
+        '2_2':True
     }
 
     def __init__(self, appDbConStr: str, secCtrls: dict = {}):
@@ -68,10 +70,10 @@ class RtmDailyReportGenerator:
                     self.appDbConStr, startDt, endDt)
                 # reportContext.update(secIexGraphData)
                 print(
-                    "section iex dam table context setting complete")
+                    "section iex dam rtm graph plotting done")
             except Exception as err:
                 print(
-                    "error while fetching section iex dam table")
+                    "error while iex dam rtm graph plotting")
                 print(err)
 
         if self.sectionCtrls["2_1"]:
@@ -85,6 +87,19 @@ class RtmDailyReportGenerator:
             except Exception as err:
                 print(
                     "error while fetching section wbes rtm table")
+                print(err)
+
+        if self.sectionCtrls["2_2"]:
+            # get section 2.1 data
+            try:
+                secWbesRtmData = fetchWbesPxTableContext(
+                    self.appDbConStr, startDt, endDt)
+                reportContext.update(secWbesRtmData)
+                print(
+                    "section wbes px table context setting complete")
+            except Exception as err:
+                print(
+                    "error while fetching section wbes px table")
                 print(err)
 
         return reportContext

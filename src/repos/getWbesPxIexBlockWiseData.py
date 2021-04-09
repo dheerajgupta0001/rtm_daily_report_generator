@@ -4,12 +4,12 @@ from typing import List
 from src.typeDefs.metricsDataRecord import IWbesMetricsDataRecord
 
 
-def getWbesRtmIexBlockWiseData(appDbConnStr: str, startDt: dt.datetime, endDt: dt.datetime) -> List[IWbesMetricsDataRecord]:
+def getWbesPxIexBlockWiseData(appDbConnStr: str, startDt: dt.datetime, endDt: dt.datetime) -> List[IWbesMetricsDataRecord]:
     targetColumns = ['TRUNC(TIME_STAMP)', 'BENEFICIARY' ,'DATA_VALUE', 'BENEFICIARY_TYPE']
 
     metricsFetchSql = """
             select {0} from 
-            mo_warehouse.WBES_RTM_IEX where time_stamp >= :1
+            mo_warehouse.WBES_PX_IEX where time_stamp >= :1
             and time_stamp < :2
             order by time_stamp asc
         """.format(','.join(targetColumns))
@@ -34,7 +34,7 @@ def getWbesRtmIexBlockWiseData(appDbConnStr: str, startDt: dt.datetime, endDt: d
         dbRows = dbCur.fetchall()
     except Exception as err:
         dbRows = []
-        print('Error while fetching wbes rtm iex data between dates')
+        print('Error while fetching wbes px iex data between dates')
         print(err)
     finally:
         # closing database cursor and connection
