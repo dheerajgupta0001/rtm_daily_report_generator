@@ -78,7 +78,7 @@ def fetchWbesPxTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.d
     # wbesPxTableDf.reset_index(inplace = True)
     # wbesPxTableDf = wbesPxTableDf.sort_values(by='Grand Total')
 
-    headers = []
+    px_headers = []
     i= 0
     cols = []
     for itr in wbesPxTableDf.columns:
@@ -88,19 +88,19 @@ def fetchWbesPxTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.d
                 'day_{0}'.format(i):'Px Traded Energy(MWH)'
             }
             i+=1
-            headers.append(temp)
+            px_headers.append(temp)
         elif itr == 'Grand Total':
             temp = {
                 'tot'.format(i):'Grand Total'
             }
             i+=1
-            headers.append(temp)
+            px_headers.append(temp)
         else:
             temp = {
                 'day_{0}'.format(i): itr
             }
             i+=1
-            headers.append(temp)
+            px_headers.append(temp)
     # cols[0] = 'beneficiary_name'
     # cols.append('Grand Total')
     # rowSumList = wbesPxTableDf.sum(axis=0)
@@ -129,8 +129,8 @@ def fetchWbesPxTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.d
             'tot': round(wbesPxTableDf[cols[8]][i])
         }
         WbesPxTableList.append(wbesPxDailyRecord)
-    secData: ISection_2_1 = {
-        'headers': headers,
+    secData: ISection_2_2 = {
+        'px_headers': px_headers,
         'wbes_px_table': WbesPxTableList
     }
     

@@ -25,4 +25,4 @@ class IWbesPxTableRecord(TypedDict):
 
 class ISection_2_2(TypedDict):
     wbes_px_table: List[IWbesPxTableRecord]
-    headers: List[IWbesPxHeaders]
+    px_headers: List[IWbesPxHeaders]
