@@ -58,6 +58,7 @@ def fetchIexRtmTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.d
         }
         iexRtmTableList.append(iexRtmDailyRecord)
     reportDt = dt.datetime(endDt.year, endDt.month, endDt.day)
+    reportDt = reportDt -dt.timedelta(days=1)
     reportDt = dt.datetime.strftime(reportDt, '%Y-%m-%d')
     secData: IIexRtmRecord = {
         'iex_rtm_table': iexRtmTableList,

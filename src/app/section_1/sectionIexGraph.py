@@ -46,6 +46,8 @@ def fetchIexGraphContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.date
 
     # derive plot title
     pltTitle = 'MCP & MCV Data as per IEX Data'
+    dateStr = startDt.strftime("%d-%m-%Y")
+    pltTitle = 'MCP & MCV Data as per IEX Data for {0}'.format(dateStr)
 
     # create a plotting area and get the figure, axes handle in return
     fig, ax = plt.subplots(figsize=(7.5, 4.5))
@@ -53,6 +55,9 @@ def fetchIexGraphContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.date
     ax2 = ax.twinx()
     # set plot title
     ax.set_title(pltTitle)
+    # set y labels
+    ax2.set_ylabel('Rs/KWH')
+    ax.set_ylabel('MWH')
     ax.set_facecolor("#474747")
     # fig.patch.set_facecolor('#d9ccff')
 

@@ -11,6 +11,7 @@ def getWbesRtmPxiBlockWiseData(appDbConnStr: str, startDt: dt.datetime, endDt: d
             select {0} from 
             mo_warehouse.WBES_RTM_PXI where time_stamp >= :1
             and time_stamp < :2
+            order by time_stamp asc
         """.format(','.join(targetColumns))
 
     # initialise codes to be returned
