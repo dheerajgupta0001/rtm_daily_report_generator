@@ -104,8 +104,7 @@ class RtmDailyReportGenerator:
                 print(
                     "section wr injection graph context setting complete")
             except Exception as err:
-                print(
-                    "error while fetching section wr injection graph")
+                print("error while fetching section wr injection graph")
                 print(err)
 
         if self.sectionCtrls["3_2"]:
@@ -154,6 +153,16 @@ class RtmDailyReportGenerator:
                 plot_1_3_path = 'assets/section_1_3.png'
                 plot_1_3_img = InlineImage(doc, plot_1_3_path)
                 reportContext['plot_1_3'] = plot_1_3_img
+
+            if self.sectionCtrls["3_1"]:
+                plot_3_1_path = 'assets/section_3_1.png'
+                plot_3_1_img = InlineImage(doc, plot_3_1_path)
+                reportContext['plot_3_1'] = plot_3_1_img
+
+            if self.sectionCtrls["3_2"]:
+                plot_3_2_path = 'assets/section_3_2.png'
+                plot_3_2_img = InlineImage(doc, plot_3_2_path)
+                reportContext['plot_3_2'] = plot_3_2_img
 
             
             doc.render(reportContext)
