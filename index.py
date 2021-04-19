@@ -15,12 +15,10 @@ dumpFolder: str = appConfig['dumpFolder']
 # generate report word file monthly_rep_template
 tmplPath: str = "templates/rtm_report_template.docx"
 
-# create weekly report
+# create rtm daily report report
 rtmRprtGntr = RtmDailyReportGenerator(appDbConStr)
-# endDt = dt.datetime.now() - dt.timedelta(days=13)
 endDt = dt.datetime.now()
 endDt = dt.datetime(endDt.year,endDt.month,endDt.day)
-startDt = endDt - dt.timedelta(days=9)
-endDt = startDt + dt.timedelta(days=7)
+startDt = endDt - dt.timedelta(days=7)
 rtmRprtGntr.generateRtmDailyReport(startDt, endDt, tmplPath, dumpFolder)
 print('Report generation Done')

@@ -87,8 +87,6 @@ def fetchWrInjGraphContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.da
     # enable legends
     ax.legend(bbox_to_anchor=(0.0, -0.3, 1, 0), loc='best',
               ncol=3, mode="expand", borderaxespad=0.)
-    ax.legend(bbox_to_anchor=(0.0, -0.3, 1, 0), loc='lower right',
-              ncol=3, mode="expand", borderaxespad=0.)
     fig.subplots_adjust(bottom=0.25, top=0.8)
     fig.savefig('assets/section_3_1.png')
 

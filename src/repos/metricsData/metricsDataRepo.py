@@ -1,6 +1,7 @@
 from typing import List
 import datetime as dt
 from src.typeDefs.metricsDataRecord import IMetricsDataRecord
+from src.typeDefs.iexGtamDerivedRecord import IIexGtamDerivedDataRecord
 from src.repos.getIexRtmBlockWiseData import getIexRtmBlockWiseData
 from src.repos.getIexDamBlockWiseData import getIexDamBlockWiseData
 from src.repos.getWbesRtmIexBlockWiseData import getWbesRtmIexBlockWiseData
@@ -11,6 +12,7 @@ from src.repos.getWbesPxPxiBeneficiaryBlockWiseData import getWbesPxPxiBeneficia
 from src.repos.getWbesPxIexBeneficiaryBlockWiseData import getWbesPxIexBeneficiaryBlockWiseData
 from src.repos.getWbesPxPxiBlockWiseData import getWbesPxPxiBlockWiseData
 from src.repos.getWbesPxIexBlockWiseData import getWbesPxIexBlockWiseData
+from src.repos.getIexGtamDerivedData import getIexGtamDerivedData
 
 
 class MetricsDataRepo():
@@ -88,3 +90,10 @@ class MetricsDataRepo():
             bool: returns true if process is ok
         """
         return getWbesPxIexBeneficiaryBlockWiseData(appDbConnStr=self.appDbConnStr, startDt=startDt, endDt=endDt,beneficiary=beneficiary,beneficiary_type=beneficiary_type)
+    
+    def getIexGtamDerivedData(self, tradeDt: dt.datetime) -> List[IIexGtamDerivedDataRecord]:
+        """inserts a entity metrics time series data into the app db
+        Returns:
+            bool: returns true if process is ok
+        """
+        return getIexGtamDerivedData(appDbConnStr=self.appDbConnStr, tradeDt = tradeDt)

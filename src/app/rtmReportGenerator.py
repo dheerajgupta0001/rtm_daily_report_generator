@@ -10,9 +10,8 @@ from src.typeDefs.iexRtmRecord import IIexRtmRecord
 from src.app.section_2.sectionWbesRtmTable import fetchWbesRtmTableContext
 from src.app.section_3.sectionWrInjGraph import fetchWrInjGraphContext
 from src.app.section_3.sectionWrDrawlGraph import fetchWrDrawlGraphContext
-
-
 from src.app.section_2.sectionWbesPxTable import fetchWbesPxTableContext
+from src.app.section_4.sectionIexGtamDerivedTable import fetchIexGtamDerivedTable
 # from docx2pdf import convert
 
 
@@ -24,9 +23,10 @@ class RtmDailyReportGenerator:
         '1_2': True,
         '1_3': True,
         '2_1': True,
-        '2_2':True,
-        '3_1':True,
-        '3_2':True
+        '2_2': True,
+        '3_1': True,
+        '3_2': True,
+        '4_1': True
     }
 
     def __init__(self, appDbConStr: str, secCtrls: dict = {}):
@@ -95,32 +95,6 @@ class RtmDailyReportGenerator:
                     "error while fetching section wbes rtm table")
                 print(err)
 
-        if self.sectionCtrls["3_1"]:
-            # get section 3.1 data
-            try:
-                secWrInjGraph = fetchWrInjGraphContext(
-                    self.appDbConStr, startDt, endDt)
-                reportContext.update(secWrInjGraph)
-                print(
-                    "section wr injection graph context setting complete")
-            except Exception as err:
-                print("error while fetching section wr injection graph")
-                print(err)
-
-        if self.sectionCtrls["3_2"]:
-            # get section 3.1 data
-            try:
-                secWrDrawlGraph = fetchWrDrawlGraphContext(
-                    self.appDbConStr, startDt, endDt)
-                reportContext.update(secWrDrawlGraph)
-                print(
-                    "section wr drawal graph context setting complete")
-            except Exception as err:
-                print(
-                    "error while fetching section wr drawal graph")
-                print(err)
-
-
         if self.sectionCtrls["2_2"]:
             # get section 2.1 data
             try:
@@ -133,6 +107,45 @@ class RtmDailyReportGenerator:
                 print(
                     "error while fetching section wbes px table")
                 print(err)
+
+        if self.sectionCtrls["3_1"]:
+            # get section 3.1 data
+            try:
+                secWrInjGraph = fetchWrInjGraphContext(
+                    self.appDbConStr, startDt, endDt)
+                # reportContext.update(secWrInjGraph)
+                print(
+                    "section wr injection graph context setting complete")
+            except Exception as err:
+                print("error while fetching section wr injection graph")
+                print(err)
+
+        if self.sectionCtrls["3_2"]:
+            # get section 3.1 data
+            try:
+                secWrDrawlGraph = fetchWrDrawlGraphContext(
+                    self.appDbConStr, startDt, endDt)
+                # reportContext.update(secWrDrawlGraph)
+                print(
+                    "section wr drawal graph context setting complete")
+            except Exception as err:
+                print(
+                    "error while fetching section wr drawal graph")
+                print(err)
+
+        if self.sectionCtrls["4_1"]:
+            # get section 4.1 data
+            try:
+                iexGtamTableData = fetchIexGtamDerivedTable(
+                    self.appDbConStr, startDt, endDt)
+                reportContext.update(iexGtamTableData)
+                print(
+                    "section iex gtam table context setting complete")
+            except Exception as err:
+                print(
+                    "error while fetching section iex gtam table")
+                print(err)
+
 
         return reportContext
 
