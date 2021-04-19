@@ -79,13 +79,16 @@ def fetchWbesPxTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.d
     for itr in range(len(wbesPxTableDf['beneficiary_name'])):
         if(pd.isnull(wbesPxTableDf['beneficiary_name'][itr])):
             wbesPxTableDf['beneficiary_name'][itr] = 'Total WR Injection'
+            wbesPxTableDf['Grand Total'][itr] = sum(injection_sum)/2
     wbesPxTableDf= wbesPxTableDf.append(drawal_sum,ignore_index=True)
     for itr in range(len(wbesPxTableDf['beneficiary_name'])):
         if(pd.isnull(wbesPxTableDf['beneficiary_name'][itr])):
             wbesPxTableDf['beneficiary_name'][itr] = 'Total WR Drawal'
-            
-    wbesPxTableDf.drop(['Grand Total'],axis=1,inplace=True)
-    wbesPxTableDf['Grand Total'] = wbesPxTableDf.sum(axis=1)
+            wbesPxTableDf['Grand Total'][itr] = sum(drawal_sum)/2
+
+    # del wbesPxTableDf['Grand Total']      
+    # wbesPxTableDf.drop(['Grand Total'],axis=1,inplace=True)
+    # wbesPxTableDf['Grand Total'] = wbesPxTableDf.sum(axis=1)
     # demo starts
 
     wbesPxTableDf.reset_index(inplace = True)
@@ -114,23 +117,11 @@ def fetchWbesPxTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.d
             }
             i+=1
             px_headers.append(temp)
-    # cols[0] = 'beneficiary_name'
-    # cols.append('Grand Total')
-    # rowSumList = wbesPxTableDf.sum(axis=0)
 
     WbesPxTableList: ISection_2_1["wbes_rtm_table"] = []
 
     for i in wbesPxTableDf.index:
         wbesPxDailyRecord: IWbesPxTableRecord = {
-            # 'ben_name': wbesPxTableDf['beneficiary_name'][i],
-            # 'day_1': wbesPxTableDf['04-04-2021'][i],
-            # 'day_2': wbesPxTableDf['05-04-2021'][i],
-            # 'day_3': wbesPxTableDf['04-04-2021'][i],
-            # 'day_4': wbesPxTableDf['05-04-2021'][i],
-            # 'day_5': wbesPxTableDf['04-04-2021'][i],
-            # 'day_6': wbesPxTableDf['05-04-2021'][i],
-            # 'day_7': wbesPxTableDf['04-04-2021'][i],
-            # 'tot': wbesPxTableDf['Grand Total'][i]
             'ben_name': wbesPxTableDf[cols[0]][i],
             'day_1': round(wbesPxTableDf[cols[1]][i]),
             'day_2': round(wbesPxTableDf[cols[2]][i]),

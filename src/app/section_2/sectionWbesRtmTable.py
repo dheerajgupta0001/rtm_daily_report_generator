@@ -79,30 +79,17 @@ def fetchWbesRtmTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
     for itr in range(len(wbesRtmTableDf['beneficiary_name'])):
         if(pd.isnull(wbesRtmTableDf['beneficiary_name'][itr])):
             wbesRtmTableDf['beneficiary_name'][itr] = 'Total WR Injection'
+            wbesRtmTableDf['Grand Total'][itr] = sum(injection_sum)/2
     wbesRtmTableDf= wbesRtmTableDf.append(drawal_sum,ignore_index=True)
     for itr in range(len(wbesRtmTableDf['beneficiary_name'])):
         if(pd.isnull(wbesRtmTableDf['beneficiary_name'][itr])):
             wbesRtmTableDf['beneficiary_name'][itr] = 'Total WR Drawal'
+            wbesRtmTableDf['Grand Total'][itr] = sum(drawal_sum)/2
             
-    wbesRtmTableDf.drop(['Grand Total'],axis=1,inplace=True)
-    wbesRtmTableDf['Grand Total'] = wbesRtmTableDf.sum(axis=1)
     # demo starts
 
     wbesRtmTableDf.reset_index(inplace = True)
     wbesRtmTableDf.drop(['index', 'level_0'],axis=1,inplace=True)
-
-    # wbesRtmTableDf = wbesRtmIexTableDf.merge(wbesRtmPxiTableDf[['time_stamp', 'beneficiary_name', 'rtm_pxi_data']])
-    # wbesRtmTableDf['wbes_rtm_data'] = (wbesRtmTableDf['rtm_iex_data'] + wbesRtmTableDf['rtm_pxi_data'])/4
-    # wbesRtmTableDf['wbes_rtm_data'] = wbesRtmTableDf['wbes_rtm_data'].astype(int)
-    # wbesRtmTableDf.drop(['rtm_iex_data', 'rtm_pxi_data'],axis=1,inplace=True)
-    # wbesRtmTableDf['time_stamp'] = wbesRtmTableDf['time_stamp'].dt.strftime('%d-%m-%Y')
-    # wbesRtmTableDf = wbesRtmTableDf.pivot(
-    #     index='beneficiary_name', columns='time_stamp', values='wbes_rtm_data')
-    # wbesRtmTableDf['Grand Total'] = wbesRtmTableDf.sum(axis=1)
-    # index_names = wbesRtmTableDf[wbesRtmTableDf['Grand Total'] == 0].index
-    # wbesRtmTableDf.drop(index_names, inplace = True)
-    # wbesRtmTableDf.reset_index(inplace = True)
-    # wbesRtmTableDf = wbesRtmTableDf.sort_values(by='Grand Total')
 
     headers = []
     i= 0
@@ -127,23 +114,11 @@ def fetchWbesRtmTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
             }
             i+=1
             headers.append(temp)
-    # cols[0] = 'beneficiary_name'
-    # cols.append('Grand Total')
-    # rowSumList = wbesRtmTableDf.sum(axis=0)
 
     WbesRtmTableList: ISection_2_1["wbes_rtm_table"] = []
 
     for i in wbesRtmTableDf.index:
         wbesRtmDailyRecord: IWbesRtmTableRecord = {
-            # 'ben_name': wbesRtmTableDf['beneficiary_name'][i],
-            # 'day_1': wbesRtmTableDf['04-04-2021'][i],
-            # 'day_2': wbesRtmTableDf['05-04-2021'][i],
-            # 'day_3': wbesRtmTableDf['04-04-2021'][i],
-            # 'day_4': wbesRtmTableDf['05-04-2021'][i],
-            # 'day_5': wbesRtmTableDf['04-04-2021'][i],
-            # 'day_6': wbesRtmTableDf['05-04-2021'][i],
-            # 'day_7': wbesRtmTableDf['04-04-2021'][i],
-            # 'tot': wbesRtmTableDf['Grand Total'][i]
             'ben_name': wbesRtmTableDf[cols[0]][i],
             'day_1': round(wbesRtmTableDf[cols[1]][i]),
             'day_2': round(wbesRtmTableDf[cols[2]][i]),
