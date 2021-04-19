@@ -60,10 +60,36 @@ def fetchWbesRtmTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
     wbesRtmTableDf['Grand Total'] = wbesRtmTableDf.sum(axis=1)
     index_names = wbesRtmTableDf[wbesRtmTableDf['Grand Total'] == 0].index
     wbesRtmTableDf.drop(index_names, inplace = True)
+
+    # testing starts
+    wbesRtmTableDf.reset_index(inplace = True)
+    injection_vals = wbesRtmTableDf[wbesRtmTableDf['Grand Total'] < 0].index
+    injection_df = wbesRtmTableDf.loc[injection_vals]
+    injection_sum = injection_df.select_dtypes(pd.np.number).sum().rename('total')
+    drawal_vals = wbesRtmTableDf[wbesRtmTableDf['Grand Total'] > 0].index
+    drawal_df = wbesRtmTableDf.loc[drawal_vals]
+    drawal_sum = drawal_df.select_dtypes(pd.np.number).sum().rename('total')
+    # testing ends
+
     wbesRtmTableDf.reset_index(inplace = True)
     wbesRtmTableDf = wbesRtmTableDf.sort_values(by='Grand Total')
+
+    # demo starts
+    wbesRtmTableDf= wbesRtmTableDf.append(injection_sum,ignore_index=True)
+    for itr in range(len(wbesRtmTableDf['beneficiary_name'])):
+        if(pd.isnull(wbesRtmTableDf['beneficiary_name'][itr])):
+            wbesRtmTableDf['beneficiary_name'][itr] = 'Total WR Injection'
+    wbesRtmTableDf= wbesRtmTableDf.append(drawal_sum,ignore_index=True)
+    for itr in range(len(wbesRtmTableDf['beneficiary_name'])):
+        if(pd.isnull(wbesRtmTableDf['beneficiary_name'][itr])):
+            wbesRtmTableDf['beneficiary_name'][itr] = 'Total WR Drawal'
+            
+    wbesRtmTableDf.drop(['Grand Total'],axis=1,inplace=True)
+    wbesRtmTableDf['Grand Total'] = wbesRtmTableDf.sum(axis=1)
+    # demo starts
+
     wbesRtmTableDf.reset_index(inplace = True)
-    wbesRtmTableDf.drop(['index'],axis=1,inplace=True)
+    wbesRtmTableDf.drop(['index', 'level_0'],axis=1,inplace=True)
 
     # wbesRtmTableDf = wbesRtmIexTableDf.merge(wbesRtmPxiTableDf[['time_stamp', 'beneficiary_name', 'rtm_pxi_data']])
     # wbesRtmTableDf['wbes_rtm_data'] = (wbesRtmTableDf['rtm_iex_data'] + wbesRtmTableDf['rtm_pxi_data'])/4

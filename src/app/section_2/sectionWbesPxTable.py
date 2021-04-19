@@ -60,23 +60,36 @@ def fetchWbesPxTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.d
     wbesPxTableDf['Grand Total'] = wbesPxTableDf.sum(axis=1)
     index_names = wbesPxTableDf[wbesPxTableDf['Grand Total'] == 0].index
     wbesPxTableDf.drop(index_names, inplace = True)
+
+    # testing starts
+    wbesPxTableDf.reset_index(inplace = True)
+    injection_vals = wbesPxTableDf[wbesPxTableDf['Grand Total'] < 0].index
+    injection_df = wbesPxTableDf.loc[injection_vals]
+    injection_sum = injection_df.select_dtypes(pd.np.number).sum().rename('total')
+    drawal_vals = wbesPxTableDf[wbesPxTableDf['Grand Total'] > 0].index
+    drawal_df = wbesPxTableDf.loc[drawal_vals]
+    drawal_sum = drawal_df.select_dtypes(pd.np.number).sum().rename('total')
+    # testing ends
+
     wbesPxTableDf.reset_index(inplace = True)
     wbesPxTableDf = wbesPxTableDf.sort_values(by='Grand Total')
-    wbesPxTableDf.reset_index(inplace = True)
-    wbesPxTableDf.drop(['index'],axis=1,inplace=True)
 
-    # wbesPxTableDf = wbesPxIexTableDf.merge(wbesPxPxiTableDf[['time_stamp', 'beneficiary_name', 'px_pxi_data']])
-    # wbesPxTableDf['wbes_rtm_data'] = (wbesPxTableDf['px_iex_data'] + wbesPxTableDf['px_pxi_data'])/4
-    # wbesPxTableDf['wbes_rtm_data'] = wbesPxTableDf['wbes_rtm_data'].astype(int)
-    # wbesPxTableDf.drop(['px_iex_data', 'px_pxi_data'],axis=1,inplace=True)
-    # wbesPxTableDf['time_stamp'] = wbesPxTableDf['time_stamp'].dt.strftime('%d-%m-%Y')
-    # wbesPxTableDf = wbesPxTableDf.pivot(
-    #     index='beneficiary_name', columns='time_stamp', values='wbes_rtm_data')
-    # wbesPxTableDf['Grand Total'] = wbesPxTableDf.sum(axis=1)
-    # index_names = wbesPxTableDf[wbesPxTableDf['Grand Total'] == 0].index
-    # wbesPxTableDf.drop(index_names, inplace = True)
-    # wbesPxTableDf.reset_index(inplace = True)
-    # wbesPxTableDf = wbesPxTableDf.sort_values(by='Grand Total')
+    # demo starts
+    wbesPxTableDf= wbesPxTableDf.append(injection_sum,ignore_index=True)
+    for itr in range(len(wbesPxTableDf['beneficiary_name'])):
+        if(pd.isnull(wbesPxTableDf['beneficiary_name'][itr])):
+            wbesPxTableDf['beneficiary_name'][itr] = 'Total WR Injection'
+    wbesPxTableDf= wbesPxTableDf.append(drawal_sum,ignore_index=True)
+    for itr in range(len(wbesPxTableDf['beneficiary_name'])):
+        if(pd.isnull(wbesPxTableDf['beneficiary_name'][itr])):
+            wbesPxTableDf['beneficiary_name'][itr] = 'Total WR Drawal'
+            
+    wbesPxTableDf.drop(['Grand Total'],axis=1,inplace=True)
+    wbesPxTableDf['Grand Total'] = wbesPxTableDf.sum(axis=1)
+    # demo starts
+
+    wbesPxTableDf.reset_index(inplace = True)
+    wbesPxTableDf.drop(['index', 'level_0'],axis=1,inplace=True)
 
     px_headers = []
     i= 0
