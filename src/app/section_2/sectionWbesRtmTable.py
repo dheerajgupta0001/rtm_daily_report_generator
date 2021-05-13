@@ -24,7 +24,10 @@ def fetchWbesRtmTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
     wbesRtmIexTableDf.reset_index(inplace = True)
     for itr in range(len(wbesRtmIexTableDf)):
         if wbesRtmIexTableDf['beneficiary_type'][itr] == ' Injection ':
+            wbesRtmIexTableDf['beneficiary_type'][itr] = 'Sell'
             wbesRtmIexTableDf['rtm_iex_data'][itr] = -1*(wbesRtmIexTableDf['rtm_iex_data'][itr])
+        if wbesRtmIexTableDf['beneficiary_type'][itr] == ' Drawal ':
+            wbesRtmIexTableDf['beneficiary_type'][itr] = 'Buy'
     wbesRtmIexTableDf['beneficiary_name'] = wbesRtmIexTableDf.beneficiary.str.cat(wbesRtmIexTableDf.beneficiary_type,sep=" ")
     wbesRtmIexTableDf.drop(['index', 'beneficiary_type', 'beneficiary'],axis=1,inplace=True)
 
@@ -37,7 +40,10 @@ def fetchWbesRtmTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
     wbesRtmPxiTableDf.reset_index(inplace = True)
     for itr in range(len(wbesRtmPxiTableDf)):
         if wbesRtmPxiTableDf['beneficiary_type'][itr] == ' Injection ':
+            wbesRtmPxiTableDf['beneficiary_type'][itr] = 'Sell'
             wbesRtmPxiTableDf['rtm_pxi_data'][itr] = -1*(wbesRtmPxiTableDf['rtm_pxi_data'][itr])
+        if wbesRtmPxiTableDf['beneficiary_type'][itr] == ' Drawal ':
+            wbesRtmPxiTableDf['beneficiary_type'][itr] = 'Buy'
     wbesRtmPxiTableDf['beneficiary_name'] = wbesRtmPxiTableDf.beneficiary.str.cat(wbesRtmPxiTableDf.beneficiary_type,sep=" ")
     wbesRtmPxiTableDf.drop(['index', 'beneficiary_type', 'beneficiary'],axis=1,inplace=True)
 
@@ -78,12 +84,12 @@ def fetchWbesRtmTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
     wbesRtmTableDf= wbesRtmTableDf.append(injection_sum,ignore_index=True)
     for itr in range(len(wbesRtmTableDf['beneficiary_name'])):
         if(pd.isnull(wbesRtmTableDf['beneficiary_name'][itr])):
-            wbesRtmTableDf['beneficiary_name'][itr] = 'Total WR Injection'
+            wbesRtmTableDf['beneficiary_name'][itr] = 'Total WR Sell'
             wbesRtmTableDf['Grand Total'][itr] = sum(injection_sum)/2
     wbesRtmTableDf= wbesRtmTableDf.append(drawal_sum,ignore_index=True)
     for itr in range(len(wbesRtmTableDf['beneficiary_name'])):
         if(pd.isnull(wbesRtmTableDf['beneficiary_name'][itr])):
-            wbesRtmTableDf['beneficiary_name'][itr] = 'Total WR Drawal'
+            wbesRtmTableDf['beneficiary_name'][itr] = 'Total WR Buy'
             wbesRtmTableDf['Grand Total'][itr] = sum(drawal_sum)/2
             
     # demo starts

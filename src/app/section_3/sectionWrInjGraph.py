@@ -53,7 +53,7 @@ def fetchWrInjGraphContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.da
     mergeWbesPxDf = mergeWbesPxDf.rename(columns={'data_value_x': 'DAM_MAX','data_value_y':'DAM_MIN'})
 
     # derive plot title
-    pltTitle = 'WR Injection RTM vs DAM'
+    pltTitle = 'WR Sell RTM vs DAM'
 
     # create a plotting area and get the figure, axes handle in return
     fig, ax = plt.subplots(figsize=(7.5, 4.5))
@@ -61,6 +61,7 @@ def fetchWrInjGraphContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.da
     # ax2 = ax.twinx()
     # set plot title
     ax.set_title(pltTitle)
+    ax.set_ylabel('MW')
     ax.set_facecolor("#474747")
     # fig.patch.set_facecolor('#d9ccff')
 
@@ -69,19 +70,19 @@ def fetchWrInjGraphContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.da
     # plot data and get the line artist object in return
     laThisMonth, = ax.plot(
         mergewbesRtmDf.index.values, mergewbesRtmDf['RTM_MAX'].values, color='#66b3ff')
-    laThisMonth.set_label('RTM Inj Max')
+    laThisMonth.set_label('RTM Sell Max')
 
     laLastYear, = ax.plot(
         mergeWbesPxDf.index.values, mergeWbesPxDf['DAM_MAX'].values, color='#df80ff')
-    laLastYear.set_label('DAM Inj Max')
+    laLastYear.set_label('DAM Sell Max')
 
     laPrevMonth, = ax.plot(
         mergewbesRtmDf.index.values, mergewbesRtmDf['RTM_MIN'].values, color='#00b359')
-    laPrevMonth.set_label('RTM Inj Min')
+    laPrevMonth.set_label('RTM Sell Min')
 
     laPrevMonth, = ax.plot(
         mergeWbesPxDf.index.values, mergeWbesPxDf['DAM_MIN'].values, color='#ff6666')
-    laPrevMonth.set_label('DAM Inj Min')
+    laPrevMonth.set_label('DAM Sell Min')
     # plt.show()
     # ax.set_xlim((1, 31), auto=True)
     # enable legends
