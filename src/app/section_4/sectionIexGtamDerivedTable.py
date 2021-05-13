@@ -16,14 +16,69 @@ def fetchIexGtamDerivedTable(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
 
     summ = tableDf.select_dtypes(pd.np.number).sum().rename('total')
     tableDf= tableDf.append(summ,ignore_index=True)
+
+    productType = []
     for itr in range(len(tableDf['contract_type'])):
+        if(tableDf['contract_type'][itr] == 'DAC'):
+            productType.append("DAC")
+            tableDf['contract_type'][itr] = 'TOTAL'
+        if(tableDf['contract_type'][itr] == 'DAC-NS'):
+            productType.append("DAC")
+            tableDf['contract_type'][itr] = '   NS'
+        if(tableDf['contract_type'][itr] == 'DAC-SL'):
+            productType.append("DAC")
+            tableDf['contract_type'][itr] = '   SL'
+        
+        if(tableDf['contract_type'][itr] == 'DYL'):
+            productType.append("DAILY")
+            tableDf['contract_type'][itr] = 'TOTAL'
+        if(tableDf['contract_type'][itr] == 'DYL-SL'):
+            productType.append("DAILY")
+            tableDf['contract_type'][itr] = '   SL'
+        if(tableDf['contract_type'][itr] == 'DYL-NS'):
+            productType.append("DAILY")
+            tableDf['contract_type'][itr] = '   NS'
+
+        if(tableDf['contract_type'][itr] == 'FDL'):
+            productType.append("TOTAL")
+            tableDf['contract_type'][itr] = 'TOTAL'
+        if(tableDf['contract_type'][itr] == 'FDL-SL'):
+            productType.append("DAILY")
+            tableDf['contract_type'][itr] = '   SL'
+        if(tableDf['contract_type'][itr] == 'FDL-NS'):
+            productType.append("DAILY")
+            tableDf['contract_type'][itr] = '   NS'
+
+        if(tableDf['contract_type'][itr] == 'ITD'):
+            productType.append("INTRADAY")
+            tableDf['contract_type'][itr] = 'TOTAL'
+        if(tableDf['contract_type'][itr] == 'ITD-NS'):
+            productType.append("INTRADAY")
+            tableDf['contract_type'][itr] = '   NS'
+        if(tableDf['contract_type'][itr] == 'ITD-SL'):
+            productType.append("INTRADAY")
+            tableDf['contract_type'][itr] = '   SL'
+
+        if(tableDf['contract_type'][itr] == 'WEK'):
+            productType.append("WEEKLY")
+            tableDf['contract_type'][itr] = 'TOTAL'
+        if(tableDf['contract_type'][itr] == 'WEK-SL'):
+            productType.append("WEEKLY")
+            tableDf['contract_type'][itr] = '   SL'
+        if(tableDf['contract_type'][itr] == 'WEK-NS'):
+            productType.append("WEEKLY")
+            tableDf['contract_type'][itr] = '   NS'
+
         if(pd.isnull(tableDf['contract_type'][itr])):
-            tableDf['contract_type'][itr] = 'Grand Total'
+            productType.append(" ")
+            tableDf['contract_type'][itr] = 'GRAND TOTAL'
 
     iexGtamDerivedTableList: ISection_4_1["iex_gtam_derived_table"] = []
+    tableDf['product_type'] = productType
 
     for i in tableDf.index:
         iexGtamDerivedRecord: IIexGtamDerivedDataRecord = {
+            'product_type': tableDf['product_type'][i],
             'contract_type': tableDf['contract_type'][i],
             'highest_price': round(tableDf['highest_price'][i]),
             'lowest_price': round(tableDf['lowest_price'][i]),

@@ -124,7 +124,7 @@ def fetchWbesPxTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.d
             i+=1
             px_headers.append(temp)
 
-    WbesPxTableList: ISection_2_1["wbes_rtm_table"] = []
+    WbesPxTableList: ISection_2_2["wbes_px_table"] = []
 
     for i in wbesPxTableDf.index:
         wbesPxDailyRecord: IWbesPxTableRecord = {

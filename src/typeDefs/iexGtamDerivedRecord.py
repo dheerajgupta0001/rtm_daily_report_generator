@@ -4,6 +4,7 @@ import datetime as dt
 
 class IIexGtamDerivedDataRecord(TypedDict):
     # time_stamp: dt.datetime
+    product_type: str
     contract_type: str
     highest_price: float
     lowest_price: float
