@@ -30,7 +30,7 @@ def fetchIexGtamDerivedTable(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
             tableDf['contract_type'][itr] = '   SL'
         
         if(tableDf['contract_type'][itr] == 'DYL'):
-            productType.append("DAILY")
+            productType.append("DAILY(DYL)")
             tableDf['contract_type'][itr] = 'TOTAL'
         if(tableDf['contract_type'][itr] == 'DYL-SL'):
             productType.append("DAILY")
@@ -40,7 +40,7 @@ def fetchIexGtamDerivedTable(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
             tableDf['contract_type'][itr] = '   NS'
 
         if(tableDf['contract_type'][itr] == 'FDL'):
-            productType.append("TOTAL")
+            productType.append("DAILY(FDL)")
             tableDf['contract_type'][itr] = 'TOTAL'
         if(tableDf['contract_type'][itr] == 'FDL-SL'):
             productType.append("DAILY")
