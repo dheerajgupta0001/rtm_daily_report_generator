@@ -19,13 +19,13 @@ class RtmDailyReportGenerator:
     appDbConStr: str = ''
 
     sectionCtrls = {
-        '1_1': True,
-        '1_2': True,
-        '1_3': True,
-        '2_1': True,
-        '2_2': True,
-        '3_1': True,
-        '3_2': True,
+        '1_1': False,
+        '1_2': False,
+        '1_3': False,
+        '2_1': False,
+        '2_2': False,
+        '3_1': False,
+        '3_2': False,
         '4_1': True
     }
 

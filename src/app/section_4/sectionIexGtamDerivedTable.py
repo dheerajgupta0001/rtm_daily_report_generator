@@ -72,6 +72,17 @@ def fetchIexGtamDerivedTable(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
         if(pd.isnull(tableDf['contract_type'][itr])):
             productType.append(" ")
             tableDf['contract_type'][itr] = 'GRAND TOTAL'
+            tableDf['total_traded_vol'][itr] = tableDf['total_traded_vol'][itr]/2
+            tableDf['total_trades'][itr] = tableDf['total_trades'][itr]/2
+            tableDf['max_trades'][itr] = 0
+            tableDf['lowest_price'][itr] = 10000000
+            tableDf['highest_price'][itr] = 0
+            max_max_trades = tableDf['max_trades'].max()
+            max_highest_price = tableDf['highest_price'].max()
+            min_lowest_price = tableDf['lowest_price'].min()
+            tableDf['max_trades'][itr] = max_max_trades
+            tableDf['highest_price'][itr] = max_highest_price
+            tableDf['lowest_price'][itr] = min_lowest_price
 
     iexGtamDerivedTableList: ISection_4_1["iex_gtam_derived_table"] = []
     tableDf['product_type'] = productType
