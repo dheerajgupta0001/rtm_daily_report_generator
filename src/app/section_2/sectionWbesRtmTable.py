@@ -57,8 +57,8 @@ def fetchWbesRtmTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
     testRtmIex.reset_index(inplace = True)
     testRtmIex['data_value'] = testRtmIex['data_value']/4
     testRtmIex['data_value'] = testRtmIex['data_value'].astype(int)
-    # testRtmIex['time_stamp'] = pd.to_datetime(testRtmIex['time_stamp'], format='%d-%m-%Y')
-    testRtmIex['time_stamp'] = testRtmIex['time_stamp'].dt.strftime('%d-%m-%Y')
+    testRtmIex['time_stamp'] = pd.to_datetime(testRtmIex['time_stamp']).dt.date
+    # testRtmIex['time_stamp'] = testRtmIex['time_stamp'].dt.strftime('%d-%m-%Y')
     testRtmIex = testRtmIex.pivot(
         index='beneficiary_name', columns='time_stamp', values='data_value')
     testRtmIex = testRtmIex.fillna(0)
