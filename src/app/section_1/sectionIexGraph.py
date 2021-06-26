@@ -59,9 +59,13 @@ def fetchIexGraphContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.date
     ax2.set_ylabel('Rs/KWH')
     ax.set_ylabel('MWH')
     ax.set_facecolor("#474747")
+
+    # set y axis limit
     # fig.patch.set_facecolor('#d9ccff')
 
     clr = ['#66b3ff', '#df80ff', '#ff6666', '#00b359']
+    # set x xis manually
+    x_test = [1,6,11,16,21,26,31,36,41,46,51,56,61,66,71,76,81,86,91,96]
 
     # plot data and get the line artist object in return
     laThisMonth, = ax.plot(
@@ -80,6 +84,8 @@ def fetchIexGraphContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.date
         pltDataDf.index.values, pltDataDf['RTM MCP(Rs/KWH)'].values, color='#ff6666')
     laPrevMonth.set_label('RTM MCP(Rs/KWH)')
 
+    ax.set_xlim((1,96), auto = True)
+    ax.set_xticks([1,6,11,16,21,26,31,36,41,46,51,56,61,66,71,76,81,86,91,96])
     # ax.set_xlim((1, 31), auto=True)
     # enable legends
     ax.legend(bbox_to_anchor=(0.0, -0.3, 1, 0), loc='best',
