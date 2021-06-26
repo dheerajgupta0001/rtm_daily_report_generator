@@ -18,7 +18,7 @@ tmplPath: str = "templates/rtm_report_template.docx"
 # create rtm daily report report
 rtmRprtGntr = RtmDailyReportGenerator(appDbConStr)
 endDt = dt.datetime.now()
-# endDt = endDt - dt.timedelta(days=1)
+# endDt = endDt - dt.timedelta(days=21)
 endDt = dt.datetime(endDt.year,endDt.month,endDt.day)
 startDt = endDt - dt.timedelta(days=7)
 rtmRprtGntr.generateRtmDailyReport(startDt, endDt, tmplPath, dumpFolder)
