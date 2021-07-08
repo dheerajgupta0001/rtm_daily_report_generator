@@ -57,7 +57,8 @@ def fetchWbesPxTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.d
     testPxIex.reset_index(inplace = True)
     testPxIex['data_value'] = testPxIex['data_value']/4
     testPxIex['data_value'] = testPxIex['data_value'].astype(int)
-    testPxIex['time_stamp'] = testPxIex['time_stamp'].dt.strftime('%d-%m-%Y')
+    testPxIex['time_stamp'] = pd.to_datetime(testPxIex['time_stamp']).dt.date
+    # testPxIex['time_stamp'] = testPxIex['time_stamp'].dt.strftime('%d-%m-%Y')
     testPxIex = testPxIex.pivot(
         index='beneficiary_name', columns='time_stamp', values='data_value')
     testPxIex = testPxIex.fillna(0)
