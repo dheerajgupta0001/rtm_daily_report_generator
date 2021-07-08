@@ -18,10 +18,17 @@ def fetchIexGtamDerivedTable(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
     tableDf= tableDf.append(summ,ignore_index=True)
 
     productType = []
+    tableDf['highest_price'] = tableDf['highest_price'].astype(int)
+    tableDf['lowest_price'] = tableDf['lowest_price'].astype(int)
+    tableDf['max_trades'] = tableDf['max_trades'].astype(int)
+    testDf = tableDf.copy(deep=True)
     for itr in range(len(tableDf['contract_type'])):
         if(tableDf['contract_type'][itr] == 'DAC'):
             productType.append("DAC")
             tableDf['contract_type'][itr] = 'TOTAL'
+            tableDf['highest_price'][itr] = ' '
+            tableDf['lowest_price'][itr] = ' '
+            tableDf['max_trades'][itr] = ' '
         if(tableDf['contract_type'][itr] == 'DAC-NS'):
             productType.append("DAC")
             tableDf['contract_type'][itr] = '   NS'
@@ -32,6 +39,9 @@ def fetchIexGtamDerivedTable(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
         if(tableDf['contract_type'][itr] == 'DYL'):
             productType.append("DAILY(DYL)")
             tableDf['contract_type'][itr] = 'TOTAL'
+            tableDf['highest_price'][itr] = ' '
+            tableDf['lowest_price'][itr] = ' '
+            tableDf['max_trades'][itr] = ' '
         if(tableDf['contract_type'][itr] == 'DYL-SL'):
             productType.append("DAILY")
             tableDf['contract_type'][itr] = '   SL'
@@ -42,6 +52,9 @@ def fetchIexGtamDerivedTable(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
         if(tableDf['contract_type'][itr] == 'FDL'):
             productType.append("DAILY(FDL)")
             tableDf['contract_type'][itr] = 'TOTAL'
+            tableDf['highest_price'][itr] = ' '
+            tableDf['lowest_price'][itr] = ' '
+            tableDf['max_trades'][itr] = ' '
         if(tableDf['contract_type'][itr] == 'FDL-SL'):
             productType.append("DAILY")
             tableDf['contract_type'][itr] = '   SL'
@@ -52,6 +65,9 @@ def fetchIexGtamDerivedTable(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
         if(tableDf['contract_type'][itr] == 'ITD'):
             productType.append("INTRADAY")
             tableDf['contract_type'][itr] = 'TOTAL'
+            tableDf['highest_price'][itr] = ' '
+            tableDf['lowest_price'][itr] = ' '
+            tableDf['max_trades'][itr] = ' '
         if(tableDf['contract_type'][itr] == 'ITD-NS'):
             productType.append("INTRADAY")
             tableDf['contract_type'][itr] = '   NS'
@@ -62,6 +78,9 @@ def fetchIexGtamDerivedTable(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
         if(tableDf['contract_type'][itr] == 'WEK'):
             productType.append("WEEKLY")
             tableDf['contract_type'][itr] = 'TOTAL'
+            tableDf['highest_price'][itr] = ' '
+            tableDf['lowest_price'][itr] = ' '
+            tableDf['max_trades'][itr] = ' '
         if(tableDf['contract_type'][itr] == 'WEK-SL'):
             productType.append("WEEKLY")
             tableDf['contract_type'][itr] = '   SL'
@@ -74,12 +93,12 @@ def fetchIexGtamDerivedTable(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
             tableDf['contract_type'][itr] = 'GRAND TOTAL'
             tableDf['total_traded_vol'][itr] = tableDf['total_traded_vol'][itr]/2
             tableDf['total_trades'][itr] = tableDf['total_trades'][itr]/2
-            tableDf['max_trades'][itr] = 0
-            tableDf['lowest_price'][itr] = 10000000
-            tableDf['highest_price'][itr] = 0
-            max_max_trades = tableDf['max_trades'].max()
-            max_highest_price = tableDf['highest_price'].max()
-            min_lowest_price = tableDf['lowest_price'].min()
+            testDf['max_trades'][itr] = 0
+            testDf['lowest_price'][itr] = 10000000
+            testDf['highest_price'][itr] = 0
+            max_max_trades = testDf['max_trades'].max()
+            max_highest_price = testDf['highest_price'].max()
+            min_lowest_price = testDf['lowest_price'].min()
             tableDf['max_trades'][itr] = max_max_trades
             tableDf['highest_price'][itr] = max_highest_price
             tableDf['lowest_price'][itr] = min_lowest_price
@@ -91,9 +110,9 @@ def fetchIexGtamDerivedTable(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
         iexGtamDerivedRecord: IIexGtamDerivedDataRecord = {
             'product_type': tableDf['product_type'][i],
             'contract_type': tableDf['contract_type'][i],
-            'highest_price': round(tableDf['highest_price'][i]),
-            'lowest_price': round(tableDf['lowest_price'][i]),
-            'max_trades': round(tableDf['max_trades'][i]),
+            'highest_price': tableDf['highest_price'][i],
+            'lowest_price': tableDf['lowest_price'][i],
+            'max_trades': tableDf['max_trades'][i],
             'total_trades': round(tableDf['total_trades'][i]),
             'total_traded_vol': round(tableDf['total_traded_vol'][i])
         }
