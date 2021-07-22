@@ -43,6 +43,8 @@ def fetchIexGraphContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.date
         index='Date', columns='colName', values='val')
     pltDataDf['DAM MCP(Rs/KWH)'] = pltDataDf['DAM MCP(Rs/KWH)']/1000
     pltDataDf['RTM MCP(Rs/KWH)'] = pltDataDf['RTM MCP(Rs/KWH)']/1000
+    pltDataDf['RTM MCP(Rs/KWH)'].replace(to_replace=0, method='ffill', inplace=True)
+    pltDataDf['RTM MCV(MW)'].replace(to_replace=0, method='ffill', inplace=True)
 
     # derive plot title
     pltTitle = 'MCP & MCV Data as per IEX Data'
