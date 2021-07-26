@@ -58,10 +58,11 @@ def fetchWrInjGraphContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.da
     # create a plotting area and get the figure, axes handle in return
     fig, ax = plt.subplots(figsize=(7.5, 4.5))
     # instantiate a second axes that shares the same x-axis
-    # ax2 = ax.twinx()
+    ax2 = ax.twinx()
     # set plot title
     ax.set_title(pltTitle)
     ax.set_ylabel('MW')
+    ax2.set_ylabel('RTM SELL MIN(MW)')
     ax.set_facecolor("#474747")
     # fig.patch.set_facecolor('#d9ccff')
 
@@ -76,7 +77,7 @@ def fetchWrInjGraphContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.da
         mergeWbesPxDf.index.values, mergeWbesPxDf['DAM_MAX'].values, color='#df80ff')
     laLastYear.set_label('DAM Sell Max')
 
-    laPrevMonth, = ax.plot(
+    laPrevMonth, = ax2.plot(
         mergewbesRtmDf.index.values, mergewbesRtmDf['RTM_MIN'].values, color='#00b359')
     laPrevMonth.set_label('RTM Sell Min')
 
@@ -87,6 +88,8 @@ def fetchWrInjGraphContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.da
     # ax.set_xlim((1, 31), auto=True)
     # enable legends
     ax.legend(bbox_to_anchor=(0.0, -0.3, 1, 0), loc='best',
+              ncol=3, mode="expand", borderaxespad=0.)
+    ax2.legend(bbox_to_anchor=(0.0, -0.3, 1, 0), loc='lower right',
               ncol=3, mode="expand", borderaxespad=0.)
     fig.subplots_adjust(bottom=0.25, top=0.8)
     fig.savefig('assets/section_3_1.png')
