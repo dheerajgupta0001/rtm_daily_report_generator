@@ -51,9 +51,9 @@ def fetchIexDamTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.d
             'min_mcv': round(tableDf['min_mcv_data'][i]),
             'max_mcv': round(tableDf['max_mcv_data'][i]),
             'avg_mcv': round(tableDf['avg_mcv_data'][i]),
-            'min_mcp': round(tableDf['min_mcp_data'][i], 1),
-            'max_mcp': round(tableDf['max_mcp_data'][i], 1),
-            'avg_mcp': round(tableDf['avg_mcp_data'][i], 1),
+            'min_mcp': round(tableDf['min_mcp_data'][i], 2),
+            'max_mcp': round(tableDf['max_mcp_data'][i], 2),
+            'avg_mcp': round(tableDf['avg_mcp_data'][i], 2),
             'rtm_energy': round(tableDf['rtm_energy'][i])
         }
         iexDamTableList.append(iexDamDailyRecord)

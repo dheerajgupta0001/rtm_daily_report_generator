@@ -4,6 +4,7 @@ from src.typeDefs.metricsDataRecord import IMetricsDataRecord
 from src.typeDefs.iexGtamDerivedRecord import IIexGtamDerivedDataRecord
 from src.repos.getIexRtmBlockWiseData import getIexRtmBlockWiseData
 from src.repos.getIexDamBlockWiseData import getIexDamBlockWiseData
+from src.repos.getIexGdamBlockWiseData import getIexGdamBlockWiseData
 from src.repos.getWbesRtmIexBlockWiseData import getWbesRtmIexBlockWiseData
 from src.repos.getWbesRtmPxiBlockWiseData import getWbesRtmPxiBlockWiseData
 from src.repos.getWbesRtmIexBeneficiaryBlockWiseData import getWbesRtmIexBeneficiaryBlockWiseData
@@ -40,6 +41,13 @@ class MetricsDataRepo():
             bool: returns true if process is ok
         """
         return getIexDamBlockWiseData(appDbConnStr=self.appDbConnStr, col_attributes=col_attributes, startDt=startDt, endDt=endDt)
+
+    def getIexGdamBlockWiseData(self, col_attributes: str, startDt: dt.datetime, endDt: dt.datetime) -> List[IMetricsDataRecord]:
+        """inserts a entity metrics time series data into the app db
+        Returns:
+            bool: returns true if process is ok
+        """
+        return getIexGdamBlockWiseData(appDbConnStr=self.appDbConnStr, col_attributes=col_attributes, startDt=startDt, endDt=endDt)
 
     def getWbesRtmIexBlockWiseData(self, startDt: dt.datetime, endDt: dt.datetime) -> List[IMetricsDataRecord]:
         """inserts a entity metrics time series data into the app db

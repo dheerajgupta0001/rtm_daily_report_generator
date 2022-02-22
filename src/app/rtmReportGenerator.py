@@ -5,6 +5,7 @@ from typing import List
 from docxtpl import DocxTemplate, InlineImage
 from src.app.section_1.sectionIexRtmTable import fetchIexRtmTableContext
 from src.app.section_1.sectionIexDamTable import fetchIexDamTableContext
+from src.app.section_1.sectionIexGdamTable import fetchIexGdamTableContext
 from src.app.section_1.sectionIexGraph import fetchIexGraphContext
 from src.typeDefs.iexRtmRecord import IIexRtmRecord
 from src.app.section_2.sectionWbesRtmTable import fetchWbesRtmTableContext
@@ -22,6 +23,7 @@ class RtmDailyReportGenerator:
         '1_1': True,
         '1_2': True,
         '1_3': True,
+        '1_4': True,
         '2_1': True,
         '2_2': True,
         '3_1': True,
@@ -80,6 +82,19 @@ class RtmDailyReportGenerator:
             except Exception as err:
                 print(
                     "error while iex dam rtm graph plotting")
+                print(err)
+
+        if self.sectionCtrls["1_4"]:
+            # get section 1.4 GDAM data
+            try:
+                secIexGdamData = fetchIexGdamTableContext(
+                    self.appDbConStr, startDt, endDt)
+                reportContext.update(secIexGdamData)
+                print(
+                    "section iex Gdam table context setting complete")
+            except Exception as err:
+                print(
+                    "error while fetching section iex Gdam table")
                 print(err)
 
         if self.sectionCtrls["2_1"]:
