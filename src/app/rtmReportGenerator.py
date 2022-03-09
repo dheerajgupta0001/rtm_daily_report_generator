@@ -196,6 +196,11 @@ class RtmDailyReportGenerator:
                 plot_1_3_path = 'assets/section_1_3.png'
                 plot_1_3_img = InlineImage(doc, plot_1_3_path)
                 reportContext['plot_1_3'] = plot_1_3_img
+                
+            if self.sectionCtrls["1_3_b"]:
+                plot_1_3_b_path = 'assets/section_1_3_b.png'
+                plot_1_3_b_img = InlineImage(doc, plot_1_3_b_path)
+                reportContext['plot_1_3_b'] = plot_1_3_b_img
 
             if self.sectionCtrls["3_1"]:
                 plot_3_1_path = 'assets/section_3_1.png'
