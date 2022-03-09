@@ -1,5 +1,6 @@
 import os
 import datetime as dt
+from src.app.section_1.sectionIexGdamGraph import fetchIexGdamGraphContext
 from src.typeDefs.reportContext import IReportCxt
 from typing import List
 from docxtpl import DocxTemplate, InlineImage
@@ -20,6 +21,7 @@ class RtmDailyReportGenerator:
     appDbConStr: str = ''
 
     sectionCtrls = {
+        '1_3_b': True,
         '1_1': True,
         '1_2': True,
         '1_3': True,
@@ -82,6 +84,19 @@ class RtmDailyReportGenerator:
             except Exception as err:
                 print(
                     "error while iex dam rtm graph plotting")
+                print(err)
+                
+        if self.sectionCtrls["1_3_b"]:
+            # get section 1.3.b data
+            try:
+                secIexGdamGraphData = fetchIexGdamGraphContext(
+                    self.appDbConStr, startDt, endDt)
+                # reportContext.update(secIexGraphData)
+                print(
+                    "section iex gdam graph plotting done")
+            except Exception as err:
+                print(
+                    "error while iex gdam graph plotting")
                 print(err)
 
         if self.sectionCtrls["1_4"]:
