@@ -128,6 +128,8 @@ def fetchWbesPxTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.d
     WbesPxTableList: ISection_2_2["wbes_px_table"] = []
 
     for i in wbesPxTableDf.index:
+        if not len(cols) == 9:
+            continue
         wbesPxDailyRecord: IWbesPxTableRecord = {
             'ben_name': wbesPxTableDf[cols[0]][i],
             'day_1': round(wbesPxTableDf[cols[1]][i]),
@@ -140,6 +142,18 @@ def fetchWbesPxTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.d
             'tot': round(wbesPxTableDf[cols[8]][i])
         }
         WbesPxTableList.append(wbesPxDailyRecord)
+    if not len(px_headers)==9:
+        px_headers=[
+            {'day_0': ""},
+            {'day_1': ""},
+            {'day_2': ""},
+            {'day_3': ""},
+            {'day_4': ""},
+            {'day_5': ""},
+            {'day_6': ""},
+            {'day_7': ""},
+            {'tot': ""}
+        ]
     secData: ISection_2_2 = {
         'px_headers': px_headers,
         'wbes_px_table': WbesPxTableList

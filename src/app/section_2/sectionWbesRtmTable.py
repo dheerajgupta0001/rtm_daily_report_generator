@@ -126,6 +126,8 @@ def fetchWbesRtmTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
     WbesRtmTableList: ISection_2_1["wbes_rtm_table"] = []
 
     for i in wbesRtmTableDf.index:
+        if not len(cols) == 9:
+            continue
         wbesRtmDailyRecord: IWbesRtmTableRecord = {
             'ben_name': wbesRtmTableDf[cols[0]][i],
             'day_1': round(wbesRtmTableDf[cols[1]][i]),
@@ -138,6 +140,18 @@ def fetchWbesRtmTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
             'tot': round(wbesRtmTableDf[cols[8]][i])
         }
         WbesRtmTableList.append(wbesRtmDailyRecord)
+    if not len(headers)==9:
+        headers=[
+            {'day_0': ""},
+            {'day_1': ""},
+            {'day_2': ""},
+            {'day_3': ""},
+            {'day_4': ""},
+            {'day_5': ""},
+            {'day_6': ""},
+            {'day_7': ""},
+            {'tot': ""}
+        ]
     secData: ISection_2_1 = {
         'headers': headers,
         'wbes_rtm_table': WbesRtmTableList
