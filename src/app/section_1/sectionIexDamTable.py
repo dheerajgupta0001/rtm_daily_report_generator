@@ -9,7 +9,7 @@ def fetchIexDamTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.d
     
     # get iex rtm data for the range between start date and end date
     iexDamMcvVals = mRepo.getIexDamBlockWiseData('MCV (MW)', startDt, endDt)
-    iexDamMcpVals = mRepo.getIexDamBlockWiseData('MCP (Rs/MWh) ', startDt, endDt)
+    iexDamMcpVals = mRepo.getIexDamBlockWiseData('MCP (Rs/MWh) *', startDt, endDt)
     iexDamMcvDf = pd.DataFrame(iexDamMcvVals)
     iexDamMcpDf = pd.DataFrame(iexDamMcpVals)
 

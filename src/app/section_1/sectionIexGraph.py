@@ -12,7 +12,7 @@ def fetchIexGraphContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.date
     # get iex rtm data for the range between start date and end date
     startDt = endDt - dt.timedelta(days=1)
     iexDamMcvVals = mRepo.getIexDamBlockWiseData('MCV (MW)', startDt, endDt)
-    iexDamMcpVals = mRepo.getIexDamBlockWiseData('MCP (Rs/MWh) ', startDt, endDt)
+    iexDamMcpVals = mRepo.getIexDamBlockWiseData('MCP (Rs/MWh) *', startDt, endDt)
     for itr in range(len(iexDamMcvVals)):
         iexDamMcvVals[itr]['metric_name'] = 'DAM MCV(MW)'
         iexDamMcvVals[itr]['time_stamp'] = itr+1
@@ -20,7 +20,7 @@ def fetchIexGraphContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.date
         iexDamMcpVals[itr]['metric_name'] = 'DAM MCP(Rs/KWH)'
         iexDamMcpVals[itr]['time_stamp'] = itr+1
     iexRtmMcvVals = mRepo.getIexRtmBlockWiseData('MCV (MW)', startDt, endDt)
-    iexRtmMcpVals = mRepo.getIexRtmBlockWiseData('MCP (Rs/MWh) ', startDt, endDt)
+    iexRtmMcpVals = mRepo.getIexRtmBlockWiseData('MCP (Rs/MWh) *', startDt, endDt)
     for itr in range(len(iexRtmMcvVals)):
         iexRtmMcvVals[itr]['metric_name'] = 'RTM MCV(MW)'
         iexRtmMcvVals[itr]['time_stamp'] = itr+1

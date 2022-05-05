@@ -14,7 +14,8 @@ def fetchWbesRtmTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
     wbesRtmPxiDf = pd.DataFrame(wbesRtmPxiVals)
 
     wbesRtmIexTableDf = wbesRtmIexDf.groupby(['time_stamp', 'beneficiary', 'beneficiary_type']).sum()
-    wbesRtmPxiTableDf = wbesRtmPxiDf.groupby(['time_stamp', 'beneficiary', 'beneficiary_type']).sum()
+    if(len(wbesRtmPxiDf)>0):
+        wbesRtmPxiTableDf = wbesRtmPxiDf.groupby(['time_stamp', 'beneficiary', 'beneficiary_type']).sum()
     wbesRtmIexTableDf = wbesRtmIexTableDf.rename(columns={'data_value': 'rtm_iex_data'})
     wbesRtmIexTableDf.reset_index(inplace = True)
     index_names = wbesRtmIexTableDf[wbesRtmIexTableDf['beneficiary_type'] == 'path'].index
@@ -31,28 +32,32 @@ def fetchWbesRtmTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
     wbesRtmIexTableDf['beneficiary_name'] = wbesRtmIexTableDf.beneficiary.str.cat(wbesRtmIexTableDf.beneficiary_type,sep=" ")
     wbesRtmIexTableDf.drop(['index', 'beneficiary_type', 'beneficiary'],axis=1,inplace=True)
 
-    wbesRtmPxiTableDf = wbesRtmPxiTableDf.rename(columns={'data_value': 'rtm_pxi_data'})
-    wbesRtmPxiTableDf.reset_index(inplace = True)
-    index_names = wbesRtmPxiTableDf[wbesRtmPxiTableDf['beneficiary_type'] == 'path'].index
-    wbesRtmPxiTableDf.drop(index_names, inplace = True)
-    index_names = wbesRtmPxiTableDf[wbesRtmPxiTableDf['beneficiary'] == 'West '].index
-    wbesRtmPxiTableDf.drop(index_names, inplace = True)
-    wbesRtmPxiTableDf.reset_index(inplace = True)
-    for itr in range(len(wbesRtmPxiTableDf)):
-        if wbesRtmPxiTableDf['beneficiary_type'][itr] == ' Injection ':
-            wbesRtmPxiTableDf['beneficiary_type'][itr] = 'Sell'
-            wbesRtmPxiTableDf['rtm_pxi_data'][itr] = -1*(wbesRtmPxiTableDf['rtm_pxi_data'][itr])
-        if wbesRtmPxiTableDf['beneficiary_type'][itr] == ' Drawal ':
-            wbesRtmPxiTableDf['beneficiary_type'][itr] = 'Buy'
-    wbesRtmPxiTableDf['beneficiary_name'] = wbesRtmPxiTableDf.beneficiary.str.cat(wbesRtmPxiTableDf.beneficiary_type,sep=" ")
-    wbesRtmPxiTableDf.drop(['index', 'beneficiary_type', 'beneficiary'],axis=1,inplace=True)
+    testRtmIex = wbesRtmIexTableDf
+    testRtmIex = testRtmIex.rename(columns={'rtm_iex_data': 'data_value'})
+
+    if(len(wbesRtmPxiDf)>0):
+        wbesRtmPxiTableDf = wbesRtmPxiTableDf.rename(columns={'data_value': 'rtm_pxi_data'})
+        wbesRtmPxiTableDf.reset_index(inplace = True)
+        index_names = wbesRtmPxiTableDf[wbesRtmPxiTableDf['beneficiary_type'] == 'path'].index
+        wbesRtmPxiTableDf.drop(index_names, inplace = True)
+        index_names = wbesRtmPxiTableDf[wbesRtmPxiTableDf['beneficiary'] == 'West '].index
+        wbesRtmPxiTableDf.drop(index_names, inplace = True)
+        wbesRtmPxiTableDf.reset_index(inplace = True)
+        for itr in range(len(wbesRtmPxiTableDf)):
+            if wbesRtmPxiTableDf['beneficiary_type'][itr] == ' Injection ':
+                wbesRtmPxiTableDf['beneficiary_type'][itr] = 'Sell'
+                wbesRtmPxiTableDf['rtm_pxi_data'][itr] = -1*(wbesRtmPxiTableDf['rtm_pxi_data'][itr])
+            if wbesRtmPxiTableDf['beneficiary_type'][itr] == ' Drawal ':
+                wbesRtmPxiTableDf['beneficiary_type'][itr] = 'Buy'
+        wbesRtmPxiTableDf['beneficiary_name'] = wbesRtmPxiTableDf.beneficiary.str.cat(wbesRtmPxiTableDf.beneficiary_type,sep=" ")
+        wbesRtmPxiTableDf.drop(['index', 'beneficiary_type', 'beneficiary'],axis=1,inplace=True)
+        testRtmPxi = wbesRtmPxiTableDf 
+        testRtmPxi = testRtmPxi.rename(columns={'rtm_pxi_data': 'data_value'})
+        testRtmIex = testRtmIex.append(testRtmPxi, ignore_index=True)
+        testRtmPxi = testRtmPxi.rename(columns={'data_value': 'wbes_rtm_data'})
 
     # testing 
-    testRtmIex = wbesRtmIexTableDf 
-    testRtmPxi = wbesRtmPxiTableDf 
-    testRtmPxi = testRtmPxi.rename(columns={'rtm_pxi_data': 'data_value'})
-    testRtmIex = testRtmIex.rename(columns={'rtm_iex_data': 'data_value'})
-    testRtmIex = testRtmIex.append(testRtmPxi, ignore_index=True)
+    
     testRtmIex = testRtmIex.groupby(['time_stamp', 'beneficiary_name']).sum()
     testRtmIex.reset_index(inplace = True)
     testRtmIex['data_value'] = testRtmIex['data_value']/4
@@ -63,7 +68,6 @@ def fetchWbesRtmTableContext(appDbConnStr: str, startDt: dt.datetime, endDt: dt.
     testRtmIex = testRtmIex.pivot(
         index='beneficiary_name', columns='time_stamp', values='data_value')
     testRtmIex = testRtmIex.fillna(0)
-    testRtmPxi = testRtmPxi.rename(columns={'data_value': 'wbes_rtm_data'})
     wbesRtmTableDf = testRtmIex
     wbesRtmTableDf['Grand Total'] = wbesRtmTableDf.sum(axis=1)
     index_names = wbesRtmTableDf[wbesRtmTableDf['Grand Total'] == 0].index
